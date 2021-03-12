@@ -36,7 +36,7 @@ async function opener() {
             api = 'https://api.stackexchange.com/2.2/questions?pagesize=10&fromdate=' + aWeekFromNow + '&todate=' + currentDate + '&order=desc&sort=week&tagged='+T+'&site=stackoverflow'
         }
         var req = new Request(api);
-        let json = await fetch(
+        let jsonBody = await fetch(
             req
         ).then(function(response){
             if (response.ok){
@@ -45,10 +45,10 @@ async function opener() {
             throw new Error('Something went wrong!');
         });
 
-        if (json === null){
+        if (jsonBody === null){
             alert('Error')
         }
-        var questionBodies = json.items;
+        var questionBodies = jsonBody.items;
         var associatedAnswers;
 
         var i;
@@ -65,11 +65,13 @@ async function opener() {
             categoryA = "category"+categoryID+"A"+questionNumber;
             
             var ans = document.getElementById(categoryA);
-
-            if(associatedAnswers === undefined){
+            votes2 = " Votes: "
+            if(associatedAnswers.length < 1){
                 ans.innerHTML = "Not answered!";
             }else{
-                ans.innerHTML = associatedAnswers.body;
+                ans.innerHTML = associatedAnswers[0].body + 
+                votes2.bold()+ associatedAnswers[0].score +
+                date.bold()+ (new Date(associatedAnswers[0].creation_date*1000)).toLocaleString('en-GB', { timeZone: 'UTC' }-6);
             }
         }
         return true;
@@ -84,7 +86,7 @@ async function opener() {
             }
             throw new Error('Something went wrong!');
         });
-        return body.items[0];
+        return body.items;
     }
 
 };
