@@ -25,8 +25,15 @@ async function opener() {
     var aWeekFromNow = currentDate - 604800; //going 168 hours back
     aWeekFromNow = Math.floor(aWeekFromNow);
     
+    var beforeRequest = (new Date()).getTime()
     await top10Questions(1); //10 newest (category1)
     await top10Questions(2); //10 most voted (category2)
+    var afterRequest = (new Date()).getTime()
+
+    var responseTime = Math.floor((afterRequest - beforeRequest) / 1000)
+
+    document.getElementById("res").innerHTML = responseTime + " sec is the response time"
+    
 
     async function top10Questions(categoryID){
         var api;
